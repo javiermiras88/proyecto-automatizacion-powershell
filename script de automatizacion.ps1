@@ -1,6 +1,24 @@
-﻿#####---------CONVERSION DEL ARCHIVO DE CSV A XLSX----------#####
+﻿clear-host
 
-clear-host
+####----------PROPIEDADES QUE MEJORAN LA VISUALIZACION------#####
+
+$ie = New-Object -ComObject InternetExplorer.Application
+
+$ie.navigate2("https://eu1.mobileiron.com/index.html#!/")
+
+$ie.visible = $true
+
+$ie.Width = 1920
+$ie.Height = 1080
+
+$ie.Left = 0
+$ie.top = 0
+
+$ie.ToolBar = 0
+
+#####---------CONVERSION DEL ARCHIVO DE CSV A XLSX----------#####
+
+
 
 $csv = "C:\Users\ortiga\Desktop\table.csv" #archivo origen
 $xlsx = "C:\Users\ortiga\Desktop\table2.xlsx" #archivo destino
@@ -26,12 +44,14 @@ $query.AdjustColumnWidth = 1
 $query.Refresh()
 $query.Delete()
 
-#guardamos el documento
+#si no existe creamos el  documento
+
+if(!(test-path $xlsx)){
 
 $documento.SaveAs($xlsx,51)
 
+}
 
-$hoja.Cells.Item("1,1")
 
 
 
@@ -67,6 +87,15 @@ $dispositivo = $hoja.Cells.Columns.Range($columna2).Text
 
 $columna = "BE" + $contador
 
+
+if($usuario -contains '*javiermiras*'){
+
+
+$contador++
+
+
+}
+
 $usuario = $hoja.Cells.Columns.Range($columna).Text
 
 
@@ -74,18 +103,14 @@ $usuario = $hoja.Cells.Columns.Range($columna).Text
 ##----------AUTOMATIZACION INTERNET EXPLORER------------------##
 
 
-$ie = New-Object -ComObject InternetExplorer.Application
-
-$ie.navigate2("https://eu1.mobileiron.com/index.html#!/")
-
-$ie.visible = $true
 
 
-Sleep -s 10
+Start-Sleep -s 5
 
 
  
-$ie.Document.getElementsByTagName("a")[2].click()
+$element = $ie.Document.getElementsByTagName("a")[2].click()
+
 
 $ie.Document.getElementsByTagName("button")[0].click()
 
@@ -97,7 +122,10 @@ $ie.Document.getElementsByName("uid")[0].value = $usuario
 
 
 
-sleep 2
+
+
+
+
 
 }until($contador -eq  $filas)
 
